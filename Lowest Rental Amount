@@ -1,0 +1,15 @@
+#### Lowest Rental Amount
+WITH customer_revenue AS (
+	  SELECT c.customer_id, c.first_name, c.last_name, ct.city, co.country, COUNT(r.rental_id) AS rental_count, SUM(p.amount) AS total_revenue
+	  FROM customer c
+	  JOIN address a ON c.address_id = a.address_id
+	  JOIN city ct ON a.city_id = ct.city_id
+	  JOIN country co ON ct.country_id = co.country_id
+	  JOIN payment p ON c.customer_id = p.customer_id
+	  JOIN rental r ON c.customer_id = r.customer_id
+	  GROUP BY c.customer_id, c.first_name, c.last_name, ct.city, co.country
+	)
+	SELECT first_name, last_name, city, country, rental_count, total_revenue
+	FROM customer_revenue
+	ORDER BY total_revenue
+	LIMIT 10;
